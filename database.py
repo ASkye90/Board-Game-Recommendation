@@ -1,32 +1,31 @@
-from psycopg2 import connect
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 
 __bg_ranks_file = ".\\boardgames_ranks.csv"
 
-
-class DataBase:
+class Database:
     def __init__(self, db="mydb"):
         # Connect to an existing database
-        self.conn = connect(user="postgres",
+        self.conn = psycopg2.connect(user="postgres",
                               password="admin",
                               host="127.0.0.1",
                               port="5432",
-                              database=db)
+                              database=db,
+                              cursor_factory=RealDictCursor
+                                     )
         # Create a cursor to perform database operations
         self.cursor = self.conn.cursor()
 
-    def doSomething(self, query):
-        # Print PostgreSQL details
-        print("PostgreSQL server information")
-        print(self.conn.get_dsn_parameters(), "\n")
+    def do_something(self, sql,data=()):
 
         # Executing a SQL query
-        self.cursor.execute("SELECT id,name from boardgame WHERE is_expansion='True' LIMIT 100")
+        self.cursor.execute(sql,data)
 
         # Fetch result
-        record = self.cursor.fetchall()
-        for item in enumerate(record):
-            print(str(item[1][0]) + ': ' + item[1][1])
+        # record = self.cursor.fetchall()
+        for item in self.cursor:
+            print(str(item['id']) + ': ' + item['name'])
 
     def close(self):
         if self.conn:
@@ -35,6 +34,8 @@ class DataBase:
             print("PostgreSQL connection is closed")
 
 
-
+db = Database()
+db.do_something("SELECT * from boardgame LIMIT %s",("100",))
+db.close()
 
 
