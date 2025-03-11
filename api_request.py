@@ -3,6 +3,12 @@ import time
 import requests
 
 def get_collection_for_user(user):
+    """
+    Get the API collection data for a given user on BGG
+
+    :param user: Username on BGG
+    :return: Raw XML text for user collection from BGG XML API2
+    """
     coll = {}
     while True:
         r = requests.get(

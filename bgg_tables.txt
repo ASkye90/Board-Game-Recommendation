@@ -1,0 +1,4 @@
+
+CREATE TABLE boardgame (id int, name varchar(255), yearpublished int, rank int, bayesaverage real, average real, usersrated int, is_expansion bool, abstracts_rank int, cgs_rank int, childrensgames_rank int, familygames_rank int, partygames_rank int, strategygames_rank int, thematic_rank int, wargames_rank int');
+CREATE TABLE bg_similar(bg_id int, similargame_id int)
+CREATE TABLE bg_collection(username varchar(20), bg_id int, rating real)

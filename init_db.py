@@ -3,6 +3,10 @@ import os
 
 from psycopg2.sql import Identifier, SQL
 
+"""
+
+"""
+
 _TABLE_NAMES = {
     'bg_similar',
     'boardgame' ,

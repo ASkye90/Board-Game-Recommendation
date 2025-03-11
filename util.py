@@ -1,9 +1,14 @@
 import xml.etree.ElementTree as ET
-import database
 
+def add_collection_to_database(database_, xml_text, username):
+    """
+    Adds a user collection to SQL table bg_collection
 
-def add_collection_to_database(database_, xml_root, username):
-    root = ET.fromstring(xml_root)
+    :param database_: Database to add data into
+    :param xml_text: XML-formatted string of user collection from BGG XML API2
+    :param username: Name of user
+    """
+    root = ET.fromstring(xml_text)
     for element in root:
         bg_id = element.attrib['objectid']
         user_rating = element.find('stats').find('rating').attrib['value']
@@ -14,6 +19,14 @@ def add_collection_to_database(database_, xml_root, username):
             (username, bg_id, user_rating, user_rating,))
 
 def add_similar_games_to_database(database_, similar_games):
+    """
+    Add similar games to SQL table bg_similar
+
+    :param database_: Database to add data into
+    :param similar_games: (Dict of int: [int])
+                            Key: id for original board game
+                            Values: List of ids for similar board games
+    """
     for bg_id in similar_games:
         for sg_id in similar_games.get(bg_id):
             database_.query(
