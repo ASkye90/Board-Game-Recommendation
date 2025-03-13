@@ -48,15 +48,18 @@ for bg_id in bg_ids:
     for item in result:
         sg_id = int(item['similargame_id'])
         sg_rating = float(item['bayesaverage'])
-        user_bg_rating = float(item['rating'])
+        user_orig_bg_rating = float(item['rating'])
 
         # Multiplying the user's rating for the original board game against the average rating for the similar board game.
         # Will take average if multiple board games have the same recommended similar board game.
-        # Note: Average is not actually calculated correctly, later games will have more weight with current algorithm.
-        weighted_list.setdefault(sg_id,sg_rating * user_bg_rating)
-        weighted_list[sg_id] = (weighted_list[sg_id] + sg_rating * user_bg_rating)/2
+        weighted_list.setdefault(sg_id,0)
+        weighted_list[sg_id] = weighted_list[sg_id] + sg_rating * user_orig_bg_rating
         orig_game_ids.setdefault(sg_id, [])
         orig_game_ids[sg_id].append(bg_id)
+        
+for sg_id in weighted_list.keys():
+    weighted_list[sg_id] = weighted_list[sg_id]/len(orig_game_ids[sg_id])
+
 
 # Print out the recommended games with their associated weights.
 for sg_id in sorted(weighted_list,key=weighted_list.get):
